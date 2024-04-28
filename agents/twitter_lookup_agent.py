@@ -27,5 +27,5 @@ def lookup(name: str) -> str:
     prompt_template = PromptTemplate(
         template=template, input_variables=["name_of_person"]
     )
-    twitter_profile_url = agent.run(prompt_template.format_prompt(name_of_person=name))
-    return twitter_profile_url
+    twitter_username = agent.run(prompt_template.format_prompt(name_of_person=name))
+    return twitter_username

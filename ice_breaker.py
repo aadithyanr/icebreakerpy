@@ -1,29 +1,45 @@
 from langchain.prompts import PromptTemplate
+
+
 from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import LLMChain
 from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
+from agents.twitter_lookup_agent import lookup as twitter_lookup_agent
 from third_parties.linkedin import scrape_linkedin_profile
 from third_parties.twitter import scrape_user_tweets
 
 
+def ice_break(name: str) -> str:
+    linkedin_profile_url = linkedin_lookup_agent(name)
+    linkedin_data = scrape_linkedin_profile(linkedin_profile_url)
+    twitter_username = twitter_lookup_agent(name)
+    tweets = scrape_user_tweets(username=twitter_username)
+
+    summary_template = """   
+    Given the LinkedIn information {linkedin_info} and twitter {twitter_info}
+    about a person I want you to create:
+    1. A short summary of the person
+    2. Two interesting facts about the person
+    3. A topic that may interest the person
+    4. A creative Ice Breaker to open a conversation with the person
+    \n{summary_format}
+    """
+
+    summary_prompt_template = PromptTemplate(
+        input_variables=["linkedin_info", "twitter_info"],
+        template=summary_template,
+        partial_variables={
+            "summary_format": person_intel_parser.get_format_instructions()
+        },
+    )
+
+    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+    chain = LLMChain(llm=llm, prompt=summary_prompt_template)
+    result = chain.run(linkedin_info=linkedin_data, twitter_info=tweets)
+    return result
+
+
 if __name__ == "__main__":
-    print("Hey Aadi!")
-
-    # linkedin_profile_url = linkedin_lookup_agent(name="Aadithyan Rajesh raen ai")
-
-    # summary_template = """
-    #     given info {info} of a person i want you to make a short summary of them & a few interesting facts about the person.
-    # """
-
-    # summary_prompt_template = PromptTemplate(
-    #     input_variables=["info"], template=summary_template
-    # )
-
-    # llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
-
-    # chain = LLMChain(llm=llm, prompt=summary_prompt_template)
-
-    # linkedin_data = scrape_linkedin_profile(linkedin_profile_url=linkedin_profile_url)
-
-    # print(chain.run(info=info))
-    print(scrape_user_tweets(username="@aadithyanr_", num_tweets=20))
+    name = "Aadithyan Raen AI"
+    result = ice_break(name)
+    print(result)
