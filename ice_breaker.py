@@ -1,6 +1,8 @@
 from langchain.prompts import PromptTemplate
 from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import LLMChain
+from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
+from third_parties.linkedin import scrape_linkedin_profile
 
 info = input(
     "tell me someone you've always wanted to meet! i'll tell you about him/her: "
@@ -20,5 +22,9 @@ if __name__ == "__main__":
     llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
 
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
+
+    linkedin_profile_url = linkedin_lookup_agent(name="Aadithyan Rajesh")
+
+    linkedin_data = scrape_linkedin_profile(linkedin_profile_url=linkedin_profile_url)
 
     print(chain.run(info=info))
