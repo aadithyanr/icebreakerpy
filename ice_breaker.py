@@ -1,16 +1,15 @@
 from langchain.prompts import PromptTemplate
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain
 from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
 from third_parties.linkedin import scrape_linkedin_profile
 
-info = input(
-    "tell me someone you've always wanted to meet! i'll tell you about him/her: "
-)
 
 if __name__ == "__main__":
-    print("hello open ai1")
-
+    print("Hey Aadi!")
+    
+    linkedin_profile_url = linkedin_lookup_agent(name="Aadithyan Rajesh")
+    
     summary_template = """
         given info {info} of a person i want you to make a short summary of them & a few interesting facts about them
     """
@@ -23,7 +22,6 @@ if __name__ == "__main__":
 
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
-    linkedin_profile_url = linkedin_lookup_agent(name="Aadithyan Rajesh")
 
     linkedin_data = scrape_linkedin_profile(linkedin_profile_url=linkedin_profile_url)
 
