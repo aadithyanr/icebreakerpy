@@ -8,7 +8,7 @@ from third_parties.linkedin import scrape_linkedin_profile
 if __name__ == "__main__":
     print("Hey Aadi!")
 
-    linkedin_profile_url = linkedin_lookup_agent(name="Aadithyan Rajesh")
+    linkedin_profile_url = linkedin_lookup_agent(name="Aadithyan Rajesh raen ai")
 
     summary_template = """
         given info {info} of a person i want you to make a short summary of them & a few interesting facts about the person.
@@ -22,8 +22,6 @@ if __name__ == "__main__":
 
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
-    linkedin_data = scrape_linkedin_profile(
-        linkedin_profile_url=linkedin_profile_url
-    )
+    linkedin_data = scrape_linkedin_profile(linkedin_profile_url=linkedin_profile_url)
 
     print(chain.run(info=info))
