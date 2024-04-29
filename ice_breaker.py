@@ -1,12 +1,14 @@
 from langchain.prompts import PromptTemplate
-
-
+from output_parsers import person_intel_parser
 from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import LLMChain
 from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
 from agents.twitter_lookup_agent import lookup as twitter_lookup_agent
 from third_parties.linkedin import scrape_linkedin_profile
 from third_parties.twitter import scrape_user_tweets
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv(find_dotenv())
 
 
 def ice_break(name: str) -> str:
